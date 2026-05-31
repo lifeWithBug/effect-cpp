@@ -1,5 +1,6 @@
 #include "sequence_list.h"
 #include <iostream>
+#include <utility>
 
 bool SeqList::insert(int pos, ElemType elem)
 {
@@ -43,16 +44,49 @@ void SeqList::print()
     std::cout << "(length=" << length << ")\n";
 }
 
-bool SeqLinkList::insert(int pos, ElemType elem)
+bool SeqListDy::resize(int new_capacity)
 {
-    if(pos<1||pos>=MAXSIZE||length>=MAXSIZE)
+    if(new_capacity<=capacity)
         return false;
-    for(int i=length;i>=pos;i--)
+    std::unique_ptr<ElemType[]> new_data =std::make_unique<ElemType[]>(new_capacity);
+    data=std::exchange(new_data,nullptr);
+    capacity=new_capacity;
+    return true;
+}
+
+bool SeqListDy::insert(int pos, ElemType elem)
+{
+    if(pos<1||pos>=capacity||length>=capacity)
+        return false;
+    for(int i=capacity-1;i>=pos;i--)
     {
         data[i]=data[i-1];
     }
     data[pos-1]=elem;
     length++;
+    return true;
+}
+
+int SeqListDy::append(ElemType elem)
+{
+    if(length>=capacity)
+    {
+        if(!resize(capacity==0?1:capacity*2))
+            return -1;
+    }
+    data[length++]=elem;
+    return length;
+}
+
+bool SeqListDy::remove(int pos)
+{
+    if(pos<1||pos>length)
+        return false;
+    for(int i=pos;i<length;i++)
+    {
+        data[i-1]=data[i];
+    }
+    length--;
     return true;
 }
 

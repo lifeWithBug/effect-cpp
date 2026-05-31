@@ -1,14 +1,14 @@
 #pragma once
 
 #include <iostream>
-using namespace std;
+
 
 // Widget 类用于演示 C++ 中的构造函数、拷贝构造函数和赋值运算符重载。
 class Widget
 {
 public:
     // 默认构造函数
-    Widget();
+    Widget()=default;
 
     explicit Widget(const char *str);
 

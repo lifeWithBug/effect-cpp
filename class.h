@@ -6,6 +6,7 @@
 // Widget 类用于演示 C++ 中的构造函数、拷贝构造函数和赋值运算符重载。
 class Widget
 {
+    friend void print(const Widget &w);
 public:
     // 默认构造函数
     Widget()=default;
@@ -27,7 +28,7 @@ public:
 
     void swap(Widget &rhs) noexcept;
 
-    void print() const;
+    
 
     ~Widget();
 

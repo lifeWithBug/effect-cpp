@@ -78,11 +78,11 @@ Widget::~Widget()
 }
 
 // 辅助方法
-void Widget::print() const
+void print(const Widget &w)
 {
-    if (data)
+    if (w.data)
     {
-        std::cout << data << " (size: " << size << ")" << std::endl;
+        std::cout << w.data << " (size: " << w.size << ")" << std::endl;
     }
     else
     {

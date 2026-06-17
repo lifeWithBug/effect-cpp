@@ -44,6 +44,7 @@ void SeqList::print()
     std::cout << "(length=" << length << ")\n";
 }
 
+// SeqListDy implementation
 bool SeqListDy::resize(int new_capacity)
 {
     if(new_capacity<=capacity)

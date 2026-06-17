@@ -31,7 +31,7 @@ public:
     ~SeqListDy() = default;
     
     void init() {
-        data.release();
+        data.reset();
         length = 0;
         capacity=0;
     }

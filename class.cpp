@@ -27,9 +27,8 @@ Widget &Widget::operator=(Widget &&rhs) noexcept
 {
     if (this != &rhs)
     {
-        delete[] data;
-        data = std::exchange(rhs.data, nullptr);
-        size = std::exchange(rhs.size, 0);
+        Widget temp(std::move(rhs)); // 利用移动构造函数创建临时对象
+        swap(temp);                 // 交换当前对象与临时对象的资源
     }
     return *this;
 }
@@ -82,6 +81,7 @@ void print(const Widget &w)
 {
     if (w.data)
     {
+        //直接访问私有成员变量，因为 print 是 Widget 的友元函数
         std::cout << w.data << " (size: " << w.size << ")" << std::endl;
     }
     else

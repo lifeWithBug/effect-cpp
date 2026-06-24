@@ -17,6 +17,7 @@ public:
     bool insert(int pos, ElemType elem);
     int append(ElemType elem);
     bool remove(int pos);
+    int find(ElemType elem);
     void print();
 };
 

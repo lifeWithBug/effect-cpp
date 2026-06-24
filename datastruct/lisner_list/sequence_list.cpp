@@ -4,7 +4,7 @@
 
 bool SeqList::insert(int pos, ElemType elem)
 {
-    if (pos < 1 || pos > length + 1 || length >= MAXSIZE)
+    if (pos < 1 || pos > length || length >= MAXSIZE)
         return false;
     for (int i = length; i >= pos; i--)
     {
@@ -34,6 +34,17 @@ bool SeqList::remove(int pos)
     length--;
     return true;
 }
+
+int SeqList::find(ElemType elem)
+{
+    for (size_t i = 0; i < length; i++)
+    {
+        if (elem == data[i])
+            return i + 1;
+    }
+    return 0;
+}
+
 void SeqList::print()
 {
     std::cout << "SeqList: ";
@@ -47,45 +58,45 @@ void SeqList::print()
 // SeqListDy implementation
 bool SeqListDy::resize(int new_capacity)
 {
-    if(new_capacity<=capacity)
+    if (new_capacity <= capacity)
         return false;
-    std::unique_ptr<ElemType[]> new_data =std::make_unique<ElemType[]>(new_capacity);
-    data=std::exchange(new_data,nullptr);
-    capacity=new_capacity;
+    std::unique_ptr<ElemType[]> new_data = std::make_unique<ElemType[]>(new_capacity);
+    data = std::exchange(new_data, nullptr);
+    capacity = new_capacity;
     return true;
 }
 
 bool SeqListDy::insert(int pos, ElemType elem)
 {
-    if(pos<1||pos>=capacity||length>=capacity)
+    if (pos < 1 || pos >= capacity || length >= capacity)
         return false;
-    for(int i=capacity-1;i>=pos;i--)
+    for (int i = capacity - 1; i >= pos; i--)
     {
-        data[i]=data[i-1];
+        data[i] = data[i - 1];
     }
-    data[pos-1]=elem;
+    data[pos - 1] = elem;
     length++;
     return true;
 }
 
 int SeqListDy::append(ElemType elem)
 {
-    if(length>=capacity)
+    if (length >= capacity)
     {
-        if(!resize(capacity==0?1:capacity*2))
+        if (!resize(capacity == 0 ? 1 : capacity * 2))
             return -1;
     }
-    data[length++]=elem;
+    data[length++] = elem;
     return length;
 }
 
 bool SeqListDy::remove(int pos)
 {
-    if(pos<1||pos>length)
+    if (pos < 1 || pos > length)
         return false;
-    for(int i=pos;i<length;i++)
+    for (int i = pos; i < length; i++)
     {
-        data[i-1]=data[i];
+        data[i - 1] = data[i];
     }
     length--;
     return true;

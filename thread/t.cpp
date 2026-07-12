@@ -1,22 +1,54 @@
 #include <iostream>
 #include <thread>
 #include <string>
-#include <iostream>
 #include <thread>
+#include <algorithm>
+#include <mutex>
+#include <condition_variable>
+#include <queue>
 
-int counter = 0;           // 共享全局变量
+std::mutex mu;
+std::condition_variable cv;
+std::deque<int> buffer;
+const unsigned int maxBufferSize = 20;
 
-void increment() {
-    for (int i = 0; i < 100000; ++i) {
-        ++counter;          // 看似一行，实则三步
+void producer(int num)
+{
+    while (num)
+    {
+        std::unique_lock<std::mutex> lock(mu);
+        cv.wait(lock, []()
+                { return buffer.size() < maxBufferSize; });
+        buffer.push_back(num);
+        std::cout << "produced: " << num << std::endl;
+        num--;
+        lock.unlock();//让被唤醒的线程直接拿到锁
+        cv.notify_one();
     }
 }
 
-int main() {
-    std::thread t1(increment);
-    std::thread t2(increment);
-    t1.join();
-    t2.join();
-    std::cout << counter << "\n";  // 期望 200000
+void consumer()
+{
+    while (true)
+    {
+        std::unique_lock<std::mutex> lock(mu);
+        cv.wait(lock, []()
+                { return !buffer.empty(); });
+        int num = buffer.front();
+        buffer.pop_front();
+        std::cout << "consumed: " << num << std::endl;
+        lock.unlock();
+        cv.notify_one();
+    }
+}
+
+int main()
+{
+    std::thread prod(producer,30);
+    std::thread cons(consumer);
+    prod.join();
+    cons.join();
     return 0;
 }
+
+//sleep和wait有什么区别
